@@ -8,7 +8,7 @@ const error = {
 const errorMessage = {
   401: "Token nao encontrado",
   404: "Endpoint invalido ",
-  505: "CPF/CNPJ nao encontrado: ",
+  505: "Cliente nao encontrado: ",
 };
 
 const getClient = async (req, res) => {
@@ -17,7 +17,7 @@ const getClient = async (req, res) => {
     return;
   }
   
-  const { cpf } = req.query;
+  const { id_contrato } = req.query;
 
   const fetchDataClient = await fetch(
     `${config.endopint_ixc_bd}`,
@@ -29,12 +29,12 @@ const getClient = async (req, res) => {
         ixcsoft: "listar",
       },
       body: JSON.stringify({
-        qtype: "cnpj_cpf",
-        query: `${cpf}`,
+        qtype: "radusuarios.id",
+        query: `${id_contrato}`,
         oper: "=",
         page: "1",
         rp: "20",
-        sortname: "cliente.id",
+        sortname: "radusuarios.id",
         sortorder: "desc",
       }),
     }
@@ -54,7 +54,7 @@ const getClient = async (req, res) => {
   if (DataClienteResponse.total === 0) {
     return res
       .status(404)
-      .send({ ...error.true, code: 505, message: errorMessage[505] + cpf });
+      .send({ ...error.true, code: 505, message: errorMessage[505] + id_contrato });
   }
   return res
     .status(200)
