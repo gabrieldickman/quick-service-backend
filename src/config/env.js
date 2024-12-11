@@ -11,13 +11,8 @@ const config = {
   "token_opa" : process.env.TOKEN_OPA,
 
   // enpoints
-  "endopint_ixc_bd" : process.env.ENDPOINT_BD,
-  "endopint_ixc_cn" : process.env.ENDPOINT_CN,
-  "endopint_ixc_364" : process.env.ENDPOINT_364,
-  "endopint_opa" : process.env.ENDPOINT_OPA,
-
-
-
+  "endopint_radius_bd" : process.env.ENDPOINT_BD_RADIUS,
+  "endpoint_contrato_bd" : process.env.ENDPOINT_BD_CONTRATO
 }
 
 module.exports = config;
