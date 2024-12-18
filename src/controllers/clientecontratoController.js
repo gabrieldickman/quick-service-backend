@@ -15,21 +15,20 @@ const errorMessage = {
   502: "Bad Gateway",
   503: "Serviço indisponível",
   504: "Gateway Timeout",
-  505: "Cliente não encontrado: ",
+  505: "Plano não encontrado: ",
 };
 
-const getClient = async (req, res) => {
+const getPlanoCliente = async (req, res) => {
   try {
-    // Verifica se o token está configurado
     if (!config.token_bd) {
       console.error(new Error(errorMessage[401]));
-      return res.status(401).send({ ...error.true, message: errorMessage[401] });
+      return res
+        .status(401)
+        .send({ ...error.true, message: errorMessage[401] });
     }
 
-    // Obtém o ID do contrato a partir da query
-    const { idContrato } = req.query;
+    const idContrato = req.query;
 
-    // Faz a requisição para a API
     const response = await axios.post(
       `${config.endpoint_contrato_bd}`,
       {
@@ -44,17 +43,19 @@ const getClient = async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Basic " + Buffer.from(config.token_bd).toString("base64"),
+          Authorization:
+            "Basic " + Buffer.from(config.token_bd).toString("base64"),
           ixcsoft: "listar",
         },
       }
     );
 
-    // Processa a resposta
     const DataClientResponse = response.data;
 
-    // Verifica se existem registros retornados
-    if (!DataClientResponse.registros || DataClientResponse.registros.length === 0) {
+    if (
+      !DataClientResponse.registros ||
+      DataClientResponse.registros.length === 0
+    ) {
       return res.status(404).send({
         ...error.true,
         code: 505,
@@ -62,14 +63,13 @@ const getClient = async (req, res) => {
       });
     }
 
-    // Retorna o primeiro registro com sucesso
     const clienteData = DataClientResponse.registros[0].contrato;
+
     return res.status(200).send({
       ...error.false,
       data: clienteData,
     });
   } catch (error) {
-    // Captura e trata erros inesperados ou erros da API
     console.error("Erro inesperado:", error);
     const status = error.response ? error.response.status : 500;
     const message = errorMessage[status] || "Erro desconhecido";
@@ -81,4 +81,4 @@ const getClient = async (req, res) => {
   }
 };
 
-module.exports = getClient;
+module.exports = getPlanoCliente;

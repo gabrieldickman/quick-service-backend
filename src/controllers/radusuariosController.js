@@ -18,58 +18,65 @@ const errorMessage = {
   505: "Cliente não encontrado: ",
 };
 
-const getClient = async (req, res) => {
+const getLogin = async (req, res) => {
   try {
-    
-    // Verifica se o token está configurado
     if (!config.token_bd) {
       console.error(new Error(errorMessage[401]));
-      return res.status(401).send({ ...error.true, message: errorMessage[401] });
+      return res
+        .status(401)
+        .send({ ...error.true, message: errorMessage[401] });
     }
 
-    const { idLogin } = req.query;
+    const { idCliente } = req.query;
 
     const response = await axios.post(
       `${config.endopint_radius_bd}`,
       {
-        qtype: "radusuarios.id",
-        query: `${idLogin}`,
+        qtype: "radusuarios.id_cliente",
+        query: `${idCliente}`,
         oper: "=",
         page: "1",
         rp: "20",
-        sortname: "radusuarios.id",
+        sortname: "radusuarios.id_cliente",
         sortorder: "desc",
       },
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Basic " + Buffer.from(config.token_bd).toString("base64"),
+          Authorization:
+            "Basic " + Buffer.from(config.token_bd).toString("base64"),
           ixcsoft: "listar",
         },
       }
     );
 
-    const DataClientResponse = response.data;
+    const dataClientReponse = response.data;
 
     // Verifica se existem registros retornados
-    if (!DataClientResponse.registros || DataClientResponse.registros.length === 0) {
+    if (
+      !dataClientReponse.registros ||
+      dataClientReponse.registros.length === 0
+    ) {
       return res.status(404).send({
         ...error.true,
         code: 505,
-        message: errorMessage[505] + idLogin,
+        message: errorMessage[505] + idCliente,
       });
     }
 
     // Dados filtrados
     const clienteData = {
-      login : DataClientResponse.registros[0].login,
-      senha : DataClientResponse.registros[0].senha,
-      contratoPlano : DataClientResponse.registros[0].id_contrato,
-    }
+      // fulldata : dataClientReponse.registros,
+      login: dataClientReponse.registros[0].login,
+      senha: dataClientReponse.registros[0].senha,
+      idPlano: dataClientReponse.registros[0].id_contrato,
+    };
+    
     return res.status(200).send({
       ...error.false,
       data: clienteData,
     });
+
   } catch (error) {
     // Erros
     console.error("Erro inesperado:", error);
@@ -80,7 +87,9 @@ const getClient = async (req, res) => {
       code: status,
       message,
     });
+
+    return null;
   }
 };
 
-module.exports = getClient;
+module.exports = getLogin;
