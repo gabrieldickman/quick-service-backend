@@ -87,8 +87,6 @@ const getLogin = async (req, res) => {
       code: status,
       message,
     });
-
-    return null;
   }
 };
 

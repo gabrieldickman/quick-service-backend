@@ -27,7 +27,7 @@ const getPlanoCliente = async (req, res) => {
         .send({ ...error.true, message: errorMessage[401] });
     }
 
-    const idContrato = req.query;
+    const {idContrato} = req.query;
 
     const response = await axios.post(
       `${config.endpoint_contrato_bd}`,

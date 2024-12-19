@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "db": "npx json-server --watch src/db/db.json --port 8000"
+    "dev": "nodemon src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +20,6 @@
     "telnet-client": "^2.2.1"
   },
   "devDependencies": {
-    "json-server": "^1.0.0-beta.3",
     "nodemon": "^3.1.7"
   }
 }

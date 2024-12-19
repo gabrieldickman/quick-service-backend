@@ -54,10 +54,7 @@ const getIdAtendimentoPorProtocolo = async (req, res) => {
     return res.status(200).send({
       ...error.false,
       data: dataClient[0]._id,
-    });
-
-    return dataClient[0]._id;
-    
+    }); 
   } catch (error) {
     console.error("Erro inesperado:", error.message);
     if (error.response) {
@@ -71,8 +68,6 @@ const getIdAtendimentoPorProtocolo = async (req, res) => {
       code: status,
       message,
     });
-
-    return null;
   }
 };
 
