@@ -1,4 +1,4 @@
-const config = require("../config/env.js");
+const config = require("../../config/env.js");
 const axios = require("axios");
 
 const error = {
@@ -18,7 +18,7 @@ const errorMessage = {
   505: "Atendimento não encontrado: ",
 };
 
-const getIdAtendimentoPorProtocolo = async (req, res) => {
+const getAtendimento = async (req, res) => {
   try {
     if (!config.token_opa) {
       console.error(new Error(errorMessage[401]));
@@ -27,34 +27,32 @@ const getIdAtendimentoPorProtocolo = async (req, res) => {
         .send({ ...error.true, message: errorMessage[401] });
     }
 
-    const { protocolo } = req.query;
-
-    var data = JSON.stringify({
-      filter: {
-        protocolo: `${protocolo}`,
-      },
-      options: {
-        limit: 100,
-      },
-    });
+    const { idAtendimento } = req.query;
 
     const response = await axios({
       method: "get",
       maxBodyLength: Infinity,
-      url: `${config.endpoint_atendimento_opa}`,
+      url: `${config.endpoint_atendimento_completo}${idAtendimento}`,
       headers: {
         Authorization: `Bearer ${config.token_opa}`,
         "Content-Type": "application/json",
       },
-      data: data,
     });
 
-    const dataClient = response.data.data;
+    const responseData = response.data.data;
+
+    const clientData = {
+      // fulldata: responseData,
+      atendente: responseData.id_atendente.nome,
+      cliente: responseData.id_cliente.nome,
+      fone: responseData.canal_cliente,
+      protocolo: responseData.protocolo,
+    };
 
     return res.status(200).send({
       ...error.false,
-      data: dataClient[0]._id,
-    }); 
+      data: clientData,
+    });
   } catch (error) {
     console.error("Erro inesperado:", error.message);
     if (error.response) {
@@ -71,4 +69,4 @@ const getIdAtendimentoPorProtocolo = async (req, res) => {
   }
 };
 
-module.exports = getIdAtendimentoPorProtocolo;
+module.exports = getAtendimento;

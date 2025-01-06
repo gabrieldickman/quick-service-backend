@@ -11,8 +11,15 @@ const config = {
   "token_opa" : process.env.TOKEN_OPA,
 
   // enpoints
-  "endopint_radius_bd" : process.env.ENDPOINT_BD_RADIUS,
+  "endpoint_radius_bd" : process.env.ENDPOINT_BD_RADIUS,
   "endpoint_contrato_bd" : process.env.ENDPOINT_BD_CONTRATO,
+
+  "endpoint_radius_cn" : process.env.ENDPOINT_CN_RADIUS,
+  "endpoint_contrato_cn" : process.env.ENDPOINT_CN_CONTRATO,
+
+  "endpoint_radius_364" : process.env.ENDPOINT_364_RADIUS,
+  "endpoint_contrato_364" : process.env.ENDPOINT_364_CONTRATO,
+
   "endpoint_atendimento_opa" : process.env.ENDPOINT_OPA_ATENDIMENTO,
   "endpoint_atendimento_completo" : process.env.ENDPOINT_OPA_ATENDIMENTO_COMPLETO,
 }
