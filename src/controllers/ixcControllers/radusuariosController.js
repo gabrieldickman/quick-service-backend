@@ -43,7 +43,7 @@ const getLogin = async (req, res) => {
       oper: "=",
       page: "1",
       rp: "20",
-      sortname: "radusuarios.id_cliente",
+      sortname: "radusuarios.id",
       sortorder: "desc",
     };
 
@@ -90,9 +90,11 @@ const getLogin = async (req, res) => {
 
     // Filtra e estrutura os dados necessários (login, senha e idPlano)
     const filteredData = validResults.map((result) => ({
-      login: result.data.registros[0].login,
-      senha: result.data.registros[0].senha,
-      idPlano: result.data.registros[0].id_contrato,
+      logins: result.data.registros,
+      // login: result.data.registros[0].login,
+      // senha: result.data.registros[0].senha,
+      // idPlano: result.data.registros[0].id_contrato,
+      // interfaceConexão: result.data.registros[0].conexao,
       endpoint: result.endpoint, // Indica qual endpoint retornou o dado
     }));
 
@@ -110,7 +112,7 @@ const getLogin = async (req, res) => {
       code: status,
       message,
     });
-  }
+  } 
 };
 
 module.exports = getLogin;
