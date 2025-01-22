@@ -43,10 +43,13 @@ const getAtendimento = async (req, res) => {
 
     const clientData = {
       // fulldata: responseData,
-      atendente: responseData.id_atendente.nome,
-      cliente: responseData.id_cliente.nome,
-      fone: responseData.canal_cliente,
-      protocolo: responseData.protocolo,
+      nomeDoAtendente: responseData.id_atendente.nome,
+      nomeDoTitular: responseData.id_cliente.nome,
+      nomeDoContatante: responseData.id_user.nome,
+      telefoneDoContatante: responseData.canal_cliente,
+      protocoloDoAtendimento: responseData.protocolo,
+      dataDoAtendimento: responseData.date,
+      motivoDoChamado: responseData.motivos[0].idMotivo.motivo,
     };
 
     return res.status(200).send({
