@@ -12,10 +12,10 @@ const atendimentoController = require("../controllers/opaControllers/atendimento
 
 route.post("/login", authController.user_authenticate);
 
-route.get("/cliente/radius", verificarToken, radusuariosController);
-route.get("/cliente/plano", verificarToken, clientecontratoController);
-route.get("/cliente/cadastro", verificarToken, clienteController);
-route.get("/opa", verificarToken, opaController);
-route.get("/opa/atendimento", verificarToken, atendimentoController);
+route.get("/api/v1/cliente/radius", verificarToken, radusuariosController);
+route.get("/api/v1/cliente/plano", verificarToken, clientecontratoController);
+route.get("/api/v1/cliente/cadastro", verificarToken, clienteController);
+route.get("/api/v1/opa", verificarToken, opaController);
+route.get("/api/v1/opa/atendimento", verificarToken, atendimentoController);
 
 module.exports = route;
