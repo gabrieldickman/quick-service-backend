@@ -1,7 +1,7 @@
 const express = require("express");
 const route = express.Router();
 const verificarToken = require("../middlewares/authMiddleware");
-const authController = require("../controllers/activeDirectory/authController"); // Importando o controller de autenticação
+const authController = require("../controllers/activeDirectory/authController"); 
 
 const radusuariosController = require("../controllers/ixcControllers/radusuariosController");
 const clientecontratoController = require("../controllers/ixcControllers/clientecontratoController");
