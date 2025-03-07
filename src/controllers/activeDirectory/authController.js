@@ -20,7 +20,7 @@ exports.user_authenticate = (req, res) => {
     if (auth) {
       return res.status(200).json({
         message: "Autenticação bem-sucedida!",
-        token: jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1h" }),
+        token: jwt.sign({ user }, process.env.JWT_SECRET),
       });
     }
     // Se a autenticação falhar com o primeiro servidor, tenta o segundo
@@ -37,7 +37,7 @@ exports.user_authenticate = (req, res) => {
       if (auth2) {
         return res.status(200).json({
           message: "Autenticação bem-sucedida!",
-          token: jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1h" }),
+          token: jwt.sign({ user }, process.env.JWT_SECRET),
         });
       }
 
