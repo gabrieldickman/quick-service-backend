@@ -56,9 +56,9 @@ O backend também possui autenticação via **Active Directory** utilizando `act
 
 - ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) - Ambiente de execução JavaScript
 - ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) - Framework para criação das rotas
-- **activedirectory2** - Autenticação via Active Directory
-- **jsonwebtoken (JWT)** - Geração e validação de tokens
-- **Axios** - Consumo de APIs externas
+- ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)**activedirectory2** - Autenticação via Active Directory
+- ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)**jsonwebtoken (JWT)** - Geração e validação de tokens
+- ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)**Axios** - Consumo de APIs externas
 - ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) - Containerização do projeto
 
 ---
