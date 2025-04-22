@@ -8,11 +8,17 @@ exports.user_authenticate = (req, res) => {
   if (!user || !password) {
     return res.status(400).json({ message: "Usuário e senha são obrigatórios." });
   }
-  
+
   const usernameWithDomain = `${process.env.AD_DOMAIN}\\${user}`;
 
   // Primeira tentativa de autenticação com o servidor AD principal
   ad.authenticate(usernameWithDomain, password, (err, auth) => {
+
+    if (err && err.name === "InvalidCredentialsError") {
+      console.log(err);
+      return res.status(401).json({ message: "Credenciais inválidas." });
+    }
+
     if (err) {
       console.error("Erro ao autenticar no AD (IP 1):", err);
       return res.status(500).json({ message: "Erro de conexão com o Active Directory." });
@@ -27,7 +33,7 @@ exports.user_authenticate = (req, res) => {
     console.error("Erro de autenticação no AD (IP 1) - Tentando fallback...");
 
     const adFallback = switchADServer();
-    
+
     adFallback.authenticate(usernameWithDomain, password, (err2, auth2) => {
       if (err2) {
         console.error("Erro ao autenticar no AD (IP 2):", err2);
