@@ -27,7 +27,7 @@ const getPlanoCliente = async (req, res) => {
         .send({ ...error.true, message: errorMessage[401] });
     }
 
-    const {idContrato} = req.query;
+    const { idContrato } = req.query;
 
     const response = await axios.post(
       `${config.endpoint_contrato_bd}`,
@@ -63,7 +63,7 @@ const getPlanoCliente = async (req, res) => {
       });
     }
 
-    const clienteData = DataClientResponse.registros[0].contrato;
+    const clienteData = DataClientResponse.registros[0];
 
     return res.status(200).send({
       ...error.false,
@@ -81,4 +81,4 @@ const getPlanoCliente = async (req, res) => {
   }
 };
 
-module.exports = getPlanoCliente;''
+module.exports = getPlanoCliente; ''
