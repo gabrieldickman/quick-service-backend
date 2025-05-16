@@ -473,7 +473,98 @@ route.post("/login", authController.user_authenticate);
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-route.get("/api/v1/cliente/radius", verificarToken, radusuariosController);
+route.get("/api/v1/cliente/radius", verificarToken, radusuariosController.getLogin);
+
+
+/**
+ * @swagger
+ * /api/v1/cliente/radius:
+ *   put:
+ *     summary: Atualizar login e senha do cliente
+ *     description: |
+ *       Atualiza o login e a senha do cliente no sistema RADIUS.
+ *       
+ *       ### Parâmetros
+ *       - login: Login do cliente
+ *       - senha: Nova senha do cliente
+ *       - endpoint: Endpoint do Sistema
+ *       
+ *       ### Observações
+ *       - O endpoint deve ser um dos seguintes:
+ *         - https://ixc.brasildigital.net.br/webservice/v1/radusuarios (BD)
+ *         - https://ixc.candeiasnet.com.br/webservice/v1/radusuarios (CN)
+ *         - https://ixc.364telecom.com.br/webservice/v1/radusuarios (364)
+ *     tags: [Cliente]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         required: true
+ *         description: ID do cliente
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - login
+ *               - senha
+ *               - endpoint
+ *               - id_cliente
+ *               - id_grupo
+ *               - autenticacao
+ *               - id_contrato
+ *             properties:
+ *               login: 
+ *                 type: string
+ *                 example: "reinaldo"
+ *               senha:
+ *                 type: string
+ *                 example: "reinaldo"
+ *               endpoint:
+ *                 type: string
+ *                 example: "https://ixc.brasildigital.net.br/webservice/v1/radusuarios"
+ *               id_cliente:
+ *                 type: string
+ *                 example: "1"
+ *               id_grupo:
+ *                 type: string
+ *                 example: "1"
+ *               autenticacao:
+ *                 type: enum
+ *                 enum:
+ *                   - PPPoE
+ *                   - IPoE
+ *                 example: "PPPoE"
+ *               id_contrato:
+ *                 type: string
+ *                 example: "1"
+ *     responses:
+ *       200:
+ *         description: Login e senha atualizados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: string
+ *                   example: "Login e senha atualizados com sucesso"
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+
+
+route.put("/api/v1/cliente/radius", verificarToken, radusuariosController.putLogin);
 
 /**
  * @swagger

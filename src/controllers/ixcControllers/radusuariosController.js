@@ -116,4 +116,91 @@ const getLogin = async (req, res) => {
   }
 };
 
-module.exports = getLogin;
+const putLogin = async (req, res) => {
+  try {
+    const { login, senha, endpoint, id_cliente, id_grupo, autenticacao, id_contrato } = req.body;
+
+    const { id } = req.query;
+
+    if (!id) {
+      return res.status(400).send({ ...error.true, message: "ID do cliente não informado" });
+    }
+
+    if (!login || !senha || !endpoint) {
+      return res.status(400).send({ ...error.true, message: "Login, senha e endpoint não informados" });
+    }
+
+    if (!id_cliente || !id_grupo) {
+      return res.status(400).send({ ...error.true, message: "ID do cliente e ID do grupo não informados" });
+    }
+
+    if (!endpoint) {
+      return res.status(400).send({ ...error.true, message: "Endpoint não informado" });
+    }
+
+    if (!autenticacao) {
+      return res.status(400).send({ ...error.true, message: "Tipo de autenticação não informado" });
+    }
+
+    const tipoAutenticacao = {
+      PPPoE: "L",
+      IPoE: "D"
+    }
+
+    const requestData = {
+      login: login,
+      senha: senha,
+      autenticacao_por_mac: "P",
+      ativo: "S",
+      tipo_conexao_mapa: "F",
+      relacionar_concentrador_ao_login: "H",
+      auto_preencher_ip: "H",
+      auto_preencher_mac: "H",
+      id_cliente,
+      id_grupo,
+      relacionar_ip_ao_login: "H",
+      login_simultaneo: "1",
+      relacionar_mac_ao_login: "H",
+      autenticacao: tipoAutenticacao[autenticacao],
+      tipo_vinculo_plano: "D",
+      fixar_ip: "H",
+      senha_md5: "N",
+      id_contrato,
+    };
+
+    const endpoints = [
+      { url: config.endpoint_radius_bd, token: config.token_bd },
+      { url: config.endpoint_radius_cn, token: config.token_cn },
+      { url: config.endpoint_radius_364, token: config.token_364 },
+    ];
+
+    const endpointApi = endpoints.find((e) => e.url === endpoint);
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Basic " + Buffer.from(endpointApi.token).toString("base64"),
+    };
+
+    const response = await axios.put(`${endpointApi.url}/${id}`, requestData, { headers });
+
+    console.log(response.data);
+
+    if (response.data.type === "error") {
+      return res.status(400).send({ ...error.true, message: response.data.message, code: 400 });
+    }
+
+    return res.status(200).send({ ...error.false, data: response.data });
+  } catch (error) {
+    // Erros
+    console.error("Erro inesperado:", error);
+    const status = error.response ? error.response.status : 500;
+    const message = errorMessage[status] || "Erro desconhecido";
+    return res.status(status).send({
+      ...error.true,
+      code: status,
+      message,
+    });
+  }
+};
+
+module.exports = { getLogin, putLogin };
