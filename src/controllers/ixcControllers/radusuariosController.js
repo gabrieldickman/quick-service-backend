@@ -28,8 +28,37 @@ const getLogin = async (req, res) => {
         .send({ ...error.true, message: errorMessage[401] });
     }
 
+    let requestData = {};
+    let query = "";
 
-    const { idCliente } = req.query;
+    if (req.query.login) {
+
+      const { login } = req.query;
+      query = login;
+      requestData = {
+        qtype: "radusuarios.login",
+        query: `${login}`,
+        oper: "=",
+        page: "1",
+        rp: "20",
+        sortname: "radusuarios.id",
+        sortorder: "desc",
+      };
+    } else {
+      const { idCliente } = req.query;
+
+      query = idCliente;
+
+      requestData = {
+        qtype: "radusuarios.id_cliente",
+        query: `${idCliente}`,
+        oper: "=",
+        page: "1",
+        rp: "20",
+        sortname: "radusuarios.id",
+        sortorder: "desc",
+      };
+    }
 
     // Lista de endpoints e tokens para consulta
     const endpoints = [
@@ -37,16 +66,6 @@ const getLogin = async (req, res) => {
       { url: config.endpoint_radius_cn, token: config.token_cn },
       { url: config.endpoint_radius_364, token: config.token_364 },
     ];
-
-    const requestData = {
-      qtype: "radusuarios.id_cliente",
-      query: `${idCliente}`,
-      oper: "=",
-      page: "1",
-      rp: "20",
-      sortname: "radusuarios.id",
-      sortorder: "desc",
-    };
 
     // Função para consultar um único endpoint
     const fetchFromEndpoint = async ({ url, token }) => {
@@ -85,7 +104,7 @@ const getLogin = async (req, res) => {
       return res.status(404).send({
         ...error.true,
         code: 505,
-        message: errorMessage[505] + idCliente,
+        message: errorMessage[505] + query,
       });
     }
 
@@ -174,7 +193,7 @@ const putLogin = async (req, res) => {
       { url: config.endpoint_radius_364, token: config.token_364 },
     ];
 
-    const endpointApi = endpoints.find((e) => e.url === endpoint);
+    const endpointApi = endpoints.find((e) => e.url.includes(endpoint));
 
     const headers = {
       "Content-Type": "application/json",
