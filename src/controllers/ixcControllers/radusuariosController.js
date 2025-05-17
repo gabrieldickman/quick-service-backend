@@ -202,8 +202,6 @@ const putLogin = async (req, res) => {
 
     const response = await axios.put(`${endpointApi.url}/${id}`, requestData, { headers });
 
-    console.log(response.data);
-
     if (response.data.type === "error") {
       return res.status(400).send({ ...error.true, message: response.data.message, code: 400 });
     }
