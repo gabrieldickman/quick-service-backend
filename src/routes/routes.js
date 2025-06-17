@@ -6,6 +6,8 @@ const authController = require("../controllers/activeDirectory/authController");
 const radusuariosController = require("../controllers/ixcControllers/radusuariosController");
 const clientecontratoController = require("../controllers/ixcControllers/clientecontratoController");
 const clienteController = require("../controllers/ixcControllers/clienteController");
+const osController = require("../controllers/ixcControllers/osController");
+
 
 const opaController = require("../controllers/opaControllers/opaController");
 const atendimentoController = require("../controllers/opaControllers/atendimentoController");
@@ -475,7 +477,6 @@ route.post("/login", authController.user_authenticate);
  */
 route.get("/api/v1/cliente/radius", verificarToken, radusuariosController.getLogin);
 
-
 /**
  * @swagger
  * /api/v1/cliente/radius:
@@ -562,7 +563,6 @@ route.get("/api/v1/cliente/radius", verificarToken, radusuariosController.getLog
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-
 
 route.put("/api/v1/cliente/radius", verificarToken, radusuariosController.putLogin);
 
@@ -802,5 +802,77 @@ route.get("/api/v1/opa", verificarToken, opaController);
  *         $ref: '#/components/responses/InternalServerError'
  */
 route.get("/api/v1/opa/atendimento", verificarToken, atendimentoController);
+
+/**
+ * @swagger
+ * /api/v1/os:
+ *   get:
+ *     summary: Buscar informações da OS
+ *     description: |
+ *       Retorna dados detalhados da OS.
+ *     tags: [OS]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: idContrato
+ *         in: query
+ *         required: true
+ *         description: ID do contrato
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Dados da OS retornados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: false
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       os:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: string
+ *                               example: "1234567890"
+ *                             status:
+ *                               type: string
+ *                               example: "EX"
+ *                             id_contrato_kit:
+ *                               type: string
+ *                               example: "1234567890"
+ *                             setor:
+ *                               type: string
+ *                               example: "12"
+ *                             data_abertura:
+ *                               type: string
+ *                               example: "2025-06-02 19:31:44"
+ *                             data_fechamento:
+ *                               type: string
+ *                               example: "2025-06-02 19:31:44"
+ *                             id_cliente:
+ *                               type: string
+ *                               example: "1234567890"
+ *                             funcionario:
+ *                               type: string
+ *                               example: "José da Silva"
+*                       endpoint:
+*                         type: string
+*                         example: "https://ixcsoft.com.br/webservice/v1/su_oss_chamado"
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+route.get("/api/v1/os", verificarToken, osController);
 
 module.exports = route;

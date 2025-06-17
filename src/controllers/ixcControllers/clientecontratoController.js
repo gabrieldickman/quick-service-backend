@@ -77,8 +77,6 @@ const getPlanoCliente = async (req, res) => {
     // Filtra os resultados com sucesso e registros válidos
     const validResults = results.filter((result) => result.success && result.data.registros && result.data.registros.length > 0);
 
-    console.log(validResults);
-
     if (validResults.length === 0) {
       return res.status(404).send({
         ...error.true,
@@ -116,4 +114,4 @@ const getPlanoCliente = async (req, res) => {
   }
 };
 
-module.exports = getPlanoCliente; ''
+module.exports = getPlanoCliente;
