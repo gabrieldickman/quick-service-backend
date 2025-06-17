@@ -27,35 +27,57 @@ const getPlanoCliente = async (req, res) => {
         .send({ ...error.true, message: errorMessage[401] });
     }
 
-    const {idContrato} = req.query;
+    const { idContrato } = req.query;
 
-    const response = await axios.post(
-      `${config.endpoint_contrato_bd}`,
-      {
-        qtype: "cliente_contrato.id",
-        query: `${idContrato}`,
-        oper: "=",
-        page: "1",
-        rp: "20",
-        sortname: "cliente_contrato.id",
-        sortorder: "desc",
-      },
-      {
-        headers: {
+    // Lista de endpoints e tokens para consulta
+    const endpoints = [
+      { url: config.endpoint_contrato_bd, token: config.token_bd },
+      { url: config.endpoint_contrato_cn, token: config.token_cn },
+      { url: config.endpoint_contrato_364, token: config.token_364 },
+    ];
+
+    const requestData = {
+      qtype: "cliente_contrato.id",
+      query: `${idContrato}`,
+      oper: "=",
+      page: "1",
+      rp: "20",
+      sortname: "cliente_contrato.id",
+      sortorder: "desc",
+    };
+
+    const fetchFromEndpoint = async ({ url, token }) => {
+      try {
+        const headers = {
           "Content-Type": "application/json",
-          Authorization:
-            "Basic " + Buffer.from(config.token_bd).toString("base64"),
+          Authorization: "Basic " + Buffer.from(token).toString("base64"),
           ixcsoft: "listar",
-        },
+        };
+
+        const response = await axios.post(url, requestData, { headers });
+
+        return {
+          success: true,
+          data: response.data,
+          endpoint: url,
+        };
+      } catch (error) {
+        console.error("Erro ao buscar dados do endpoint:", error);
+        return {
+          success: false,
+          error: error,
+          endpoint: url,
+        };
       }
-    );
+    };
 
-    const DataClientResponse = response.data;
+    const results = await Promise.all(endpoints.map(fetchFromEndpoint));
 
-    if (
-      !DataClientResponse.registros ||
-      DataClientResponse.registros.length === 0
-    ) {
+
+    // Filtra os resultados com sucesso e registros válidos
+    const validResults = results.filter((result) => result.success && result.data.registros && result.data.registros.length > 0);
+
+    if (validResults.length === 0) {
       return res.status(404).send({
         ...error.true,
         code: 505,
@@ -63,11 +85,22 @@ const getPlanoCliente = async (req, res) => {
       });
     }
 
-    const clienteData = DataClientResponse.registros[0].contrato;
+    const DataClientResponse = validResults.map((result) => ({
+      contratos: result.data.registros,
+      endpoint: result.endpoint, // Indica qual endpoint retornou o dado
+    }));
+
+    if (DataClientResponse.length === 0) {
+      return res.status(404).send({
+        ...error.true,
+        code: 505,
+        message: errorMessage[505] + idContrato + " - " + DataClientResponse[0].endpoint,
+      });
+    }
 
     return res.status(200).send({
       ...error.false,
-      data: clienteData,
+      data: DataClientResponse,
     });
   } catch (error) {
     console.error("Erro inesperado:", error);
@@ -81,4 +114,4 @@ const getPlanoCliente = async (req, res) => {
   }
 };
 
-module.exports = getPlanoCliente;''
+module.exports = getPlanoCliente;
